@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { RegisterSw } from "./RegisterSw";
 
 export const metadata: Metadata = {
   title: "Stock & Box Logging",
@@ -22,5 +23,10 @@ export default function PwaLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <>
+      <RegisterSw />
+      {children}
+    </>
+  );
 }
