@@ -5,7 +5,8 @@ A Next.js app for field engineers to log stock usage from physical boxes (e.g. v
 ## Features
 
 - **Engineer flow**: Open `/b/[token]` (e.g. from a QR code), enter job number and quantity, submit. Records a USAGE transaction and updates item stock.
-- **Admin**: Dashboard with items and low-stock alerts, manage items (name, unit, min stock), create boxes linked to items and get shareable `/b/[token]` links.
+- **Edit last submission**: Engineers can edit their last submission within a configurable time window; edits are recorded in audit logs. Configure via Admin → Settings or `EDIT_WINDOW_MINUTES` env.
+- **Admin**: Dashboard with low-stock list and optional email alerts; set minimum stock threshold per item (Items), enable alerts and recipient in Settings; create boxes linked to items and get shareable `/b/[token]` links; **Stock In** to log deliveries; **Returns** to log unused materials returned—both increase stock; **Audit trail** logs all create/edit/delete with user + timestamp; view change history per transaction; **Usage by Job** filters usage by job number, date range, item, engineer; displays total quantities per job for Tradify costing.
 - **Auth**: Admin area protected by email/password (NextAuth with bcrypt).
 
 ## Tech
@@ -32,6 +33,11 @@ A Next.js app for field engineers to log stock usage from physical boxes (e.g. v
    DATABASE_URL="postgresql://user:password@host:port/database"
    NEXTAUTH_SECRET="your-secret-for-jwt"
    NEXTAUTH_URL="http://localhost:3000"
+   # Optional: minutes within which engineer can edit last submission (default: 10)
+   EDIT_WINDOW_MINUTES=10
+   # Optional: for low-stock email alerts (Settings → enable + recipient). Uses Resend.
+   # RESEND_API_KEY=re_xxxx
+   # ALERT_FROM_EMAIL=alerts@yourdomain.com   # must be a verified domain in Resend
    ```
 
 3. **Database**
@@ -55,6 +61,11 @@ A Next.js app for field engineers to log stock usage from physical boxes (e.g. v
 - `/admin` — Dashboard (items, low stock)
 - `/admin/items` — Add/delete items
 - `/admin/boxes` — Create boxes, copy `/b/[token]` links
+- `/admin/stock-in` — Log deliveries (box, item, quantity, optional supplier/delivery reference); stock increases
+- `/admin/returns` — Log returns to stock (box, item, quantity, optional job number); stock increases
+- `/admin/transactions` — List transactions; click to view change history (who created/edited, when)
+- `/admin/usage` — View usage by job; filter by job number, date range, item, engineer (device); totals for Tradify; CSV export for Tradify import
+- `/admin/settings` — Edit window for engineer submissions; low-stock email alerts (enable + recipient, optional Resend)
 - `/admin/login` — Admin sign-in
 - `/b/[token]` — Engineer form to log usage for that box
 
@@ -67,6 +78,10 @@ The **engineer-facing** app (home `/` and box links `/b/[token]`) is a PWA: inst
 - **Icons**: Generated at 32, 192, 512px from `src/app/icon.tsx`.
 
 Serve over **HTTPS** in production for install prompts. For offline caching, add a service worker (e.g. [Serwist](https://serwist.pages.dev/) with Next.js).
+
+## Deployment
+
+See **[DEPLOY.md](./DEPLOY.md)** for Ubuntu deployment (PM2 + Nginx or Docker).
 
 ## Learn more
 

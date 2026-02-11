@@ -44,6 +44,16 @@ export default function ItemsPage() {
     load();
   }
 
+  async function updateMinStock(id: string, minStock: number | "") {
+    const value = minStock === "" ? null : minStock;
+    const res = await fetch(`/api/admin/items/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ minStock: value }),
+    });
+    if (res.ok) load();
+  }
+
   async function deleteItem(id: string) {
     await fetch(`/api/admin/items/${id}`, { method: "DELETE" });
     load();
@@ -51,12 +61,16 @@ export default function ItemsPage() {
 
   return (
     <main>
-      <h1 className="mb-6 text-2xl font-bold text-slate-800">Items</h1>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Items</h1>
+        <p className="mt-1 text-sm text-slate-500">Manage inventory items</p>
+      </div>
 
-      <section className="mb-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold text-slate-800">
-          Add item
-        </h2>
+      <section className="mb-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-900/5">
+        <div className="border-b border-slate-200 bg-slate-50/80 px-5 py-4">
+          <h2 className="text-lg font-semibold text-slate-800">Add item</h2>
+        </div>
+        <div className="p-5">
         <form
           onSubmit={createItem}
           className="flex flex-wrap items-end gap-3 gap-y-4"
@@ -102,13 +116,14 @@ export default function ItemsPage() {
             Add item
           </button>
         </form>
+        </div>
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white shadow-sm">
+      <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-900/5">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50/80">
+              <tr className="border-b border-slate-200 bg-slate-50">
                 <th className="px-5 py-3 text-left text-sm font-medium text-slate-600">
                   Name
                 </th>
@@ -137,8 +152,41 @@ export default function ItemsPage() {
                     {i.unit.toLowerCase()}
                   </td>
                   <td className="px-5 py-3 text-slate-800">{i.currentStock}</td>
-                  <td className="px-5 py-3 text-slate-600">
-                    {i.minStock ?? "—"}
+                  <td className="px-5 py-3">
+                    <input
+                      type="number"
+                      min={0}
+                      className="w-20 rounded border border-slate-300 px-2 py-1 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                      value={i.minStock ?? ""}
+                      onChange={(e) =>
+                        setItems((prev) =>
+                          prev.map((it) =>
+                            it.id === i.id
+                              ? {
+                                  ...it,
+                                  minStock:
+                                    e.target.value === ""
+                                      ? null
+                                      : Number(e.target.value),
+                                }
+                              : it
+                          )
+                        )
+                      }
+                      onBlur={(e) => {
+                        const v = e.target.value;
+                        updateMinStock(
+                          i.id,
+                          v === "" ? "" : Math.max(0, Number(v))
+                        );
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.currentTarget.blur();
+                        }
+                      }}
+                      placeholder="—"
+                    />
                   </td>
                   <td className="px-5 py-3 text-right">
                     <button

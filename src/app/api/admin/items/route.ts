@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { logAction } from "@/lib/audit";
 
 export async function GET() {
   const items = await prisma.item.findMany({
@@ -9,6 +12,9 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session) return NextResponse.json("Unauthorized", { status: 401 });
+
   const body = await req.json();
 
   if (!body.name || !body.unit) {
@@ -22,6 +28,18 @@ export async function POST(req: Request) {
         unit: body.unit,
         minStock: body.minStock ?? null,
       },
+    });
+
+    await logAction({
+      entityType: "Item",
+      entityId: item.id,
+      action: "CREATE",
+      actor: {
+        type: "ADMIN",
+        adminId: session.user?.id,
+        email: session.user?.email ?? undefined,
+      },
+      details: { name: item.name, unit: item.unit },
     });
 
     return NextResponse.json(item, { status: 201 });

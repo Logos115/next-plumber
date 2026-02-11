@@ -40,26 +40,39 @@ model Item {
   minStock     Int?
   currentStock Int      @default(0)
 
-  boxes        Box[]
+  boxItems     BoxItem[]
   txns         Transaction[]
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
 
+/// Join table: a box can hold one or more items (many-to-many).
+model BoxItem {
+  id     String @id @default(cuid())
+  boxId  String
+  box    Box    @relation(fields: [boxId], references: [id], onDelete: Cascade)
+  itemId String
+  item   Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([boxId, itemId])
+  @@index([boxId])
+  @@index([itemId])
+}
 
 model Box {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   label     String
-  token     String   @unique
-  itemId    String
-  item      Item     @relation(fields: [itemId], references: [id])
+  token     String    @unique
+  boxItems  BoxItem[]
 
   txns      Transaction[]
 
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Transaction {
@@ -77,6 +90,55 @@ model Transaction {
 
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @updatedAt
+
+  editAudits TransactionEditAudit[]
+}
+
+/// Audit log for edits to transactions within the editable time window.
+model TransactionEditAudit {
+  id            String      @id @default(cuid())
+  transactionId String
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  oldType       TransactionType
+  oldQuantity   Int
+  oldJobNumber  String?
+  oldDeviceId   String?
+
+  newType       TransactionType
+  newQuantity   Int
+  newJobNumber  String?
+  newDeviceId   String?
+
+  actorAdminId  String?
+  actorEmail    String?
+  actorDeviceId String?
+  editedAt      DateTime    @default(now())
+}
+
+/// Audit log for create/edit/delete actions (who changed what, when).
+model ActionAudit {
+  id         String   @id @default(cuid())
+  entityType String   // Transaction, Item, Box
+  entityId   String
+  action     String   // CREATE, UPDATE, DELETE
+  actorType  String   // ADMIN, ENGINEER
+  actorId    String?
+  actorEmail String?
+  deviceId   String?
+  details    Json?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
+model AppConfig {
+  id                    String   @id @default("default")
+  editWindowMinutes     Int      @default(10)
+  lowStockAlertsEnabled Boolean  @default(false)
+  lowStockAlertEmail    String?
+  updatedAt             DateTime @updatedAt
 }
 
 enum UserRole {

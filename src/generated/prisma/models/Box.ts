@@ -28,7 +28,6 @@ export type BoxMinAggregateOutputType = {
   id: string | null
   label: string | null
   token: string | null
-  itemId: string | null
   active: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -38,7 +37,6 @@ export type BoxMaxAggregateOutputType = {
   id: string | null
   label: string | null
   token: string | null
-  itemId: string | null
   active: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -48,7 +46,6 @@ export type BoxCountAggregateOutputType = {
   id: number
   label: number
   token: number
-  itemId: number
   active: number
   createdAt: number
   updatedAt: number
@@ -60,7 +57,6 @@ export type BoxMinAggregateInputType = {
   id?: true
   label?: true
   token?: true
-  itemId?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -70,7 +66,6 @@ export type BoxMaxAggregateInputType = {
   id?: true
   label?: true
   token?: true
-  itemId?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -80,7 +75,6 @@ export type BoxCountAggregateInputType = {
   id?: true
   label?: true
   token?: true
-  itemId?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -163,7 +157,6 @@ export type BoxGroupByOutputType = {
   id: string
   label: string
   token: string
-  itemId: string
   active: boolean
   createdAt: Date
   updatedAt: Date
@@ -194,11 +187,10 @@ export type BoxWhereInput = {
   id?: Prisma.StringFilter<"Box"> | string
   label?: Prisma.StringFilter<"Box"> | string
   token?: Prisma.StringFilter<"Box"> | string
-  itemId?: Prisma.StringFilter<"Box"> | string
   active?: Prisma.BoolFilter<"Box"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Box"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Box"> | Date | string
-  item?: Prisma.XOR<Prisma.ItemScalarRelationFilter, Prisma.ItemWhereInput>
+  boxItems?: Prisma.BoxItemListRelationFilter
   txns?: Prisma.TransactionListRelationFilter
 }
 
@@ -206,11 +198,10 @@ export type BoxOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   label?: Prisma.SortOrder
   token?: Prisma.SortOrder
-  itemId?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  item?: Prisma.ItemOrderByWithRelationInput
+  boxItems?: Prisma.BoxItemOrderByRelationAggregateInput
   txns?: Prisma.TransactionOrderByRelationAggregateInput
 }
 
@@ -221,11 +212,10 @@ export type BoxWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.BoxWhereInput[]
   NOT?: Prisma.BoxWhereInput | Prisma.BoxWhereInput[]
   label?: Prisma.StringFilter<"Box"> | string
-  itemId?: Prisma.StringFilter<"Box"> | string
   active?: Prisma.BoolFilter<"Box"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Box"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Box"> | Date | string
-  item?: Prisma.XOR<Prisma.ItemScalarRelationFilter, Prisma.ItemWhereInput>
+  boxItems?: Prisma.BoxItemListRelationFilter
   txns?: Prisma.TransactionListRelationFilter
 }, "id" | "token">
 
@@ -233,7 +223,6 @@ export type BoxOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   label?: Prisma.SortOrder
   token?: Prisma.SortOrder
-  itemId?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -249,7 +238,6 @@ export type BoxScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Box"> | string
   label?: Prisma.StringWithAggregatesFilter<"Box"> | string
   token?: Prisma.StringWithAggregatesFilter<"Box"> | string
-  itemId?: Prisma.StringWithAggregatesFilter<"Box"> | string
   active?: Prisma.BoolWithAggregatesFilter<"Box"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Box"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Box"> | Date | string
@@ -262,7 +250,7 @@ export type BoxCreateInput = {
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  item: Prisma.ItemCreateNestedOneWithoutBoxesInput
+  boxItems?: Prisma.BoxItemCreateNestedManyWithoutBoxInput
   txns?: Prisma.TransactionCreateNestedManyWithoutBoxInput
 }
 
@@ -270,10 +258,10 @@ export type BoxUncheckedCreateInput = {
   id?: string
   label: string
   token: string
-  itemId: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  boxItems?: Prisma.BoxItemUncheckedCreateNestedManyWithoutBoxInput
   txns?: Prisma.TransactionUncheckedCreateNestedManyWithoutBoxInput
 }
 
@@ -284,7 +272,7 @@ export type BoxUpdateInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  item?: Prisma.ItemUpdateOneRequiredWithoutBoxesNestedInput
+  boxItems?: Prisma.BoxItemUpdateManyWithoutBoxNestedInput
   txns?: Prisma.TransactionUpdateManyWithoutBoxNestedInput
 }
 
@@ -292,10 +280,10 @@ export type BoxUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
-  itemId?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  boxItems?: Prisma.BoxItemUncheckedUpdateManyWithoutBoxNestedInput
   txns?: Prisma.TransactionUncheckedUpdateManyWithoutBoxNestedInput
 }
 
@@ -303,7 +291,6 @@ export type BoxCreateManyInput = {
   id?: string
   label: string
   token: string
-  itemId: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -322,27 +309,20 @@ export type BoxUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
-  itemId?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type BoxListRelationFilter = {
-  every?: Prisma.BoxWhereInput
-  some?: Prisma.BoxWhereInput
-  none?: Prisma.BoxWhereInput
-}
-
-export type BoxOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
+export type BoxScalarRelationFilter = {
+  is?: Prisma.BoxWhereInput
+  isNot?: Prisma.BoxWhereInput
 }
 
 export type BoxCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   label?: Prisma.SortOrder
   token?: Prisma.SortOrder
-  itemId?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -352,7 +332,6 @@ export type BoxMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   label?: Prisma.SortOrder
   token?: Prisma.SortOrder
-  itemId?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -362,57 +341,23 @@ export type BoxMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   label?: Prisma.SortOrder
   token?: Prisma.SortOrder
-  itemId?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
-export type BoxScalarRelationFilter = {
-  is?: Prisma.BoxWhereInput
-  isNot?: Prisma.BoxWhereInput
+export type BoxCreateNestedOneWithoutBoxItemsInput = {
+  create?: Prisma.XOR<Prisma.BoxCreateWithoutBoxItemsInput, Prisma.BoxUncheckedCreateWithoutBoxItemsInput>
+  connectOrCreate?: Prisma.BoxCreateOrConnectWithoutBoxItemsInput
+  connect?: Prisma.BoxWhereUniqueInput
 }
 
-export type BoxCreateNestedManyWithoutItemInput = {
-  create?: Prisma.XOR<Prisma.BoxCreateWithoutItemInput, Prisma.BoxUncheckedCreateWithoutItemInput> | Prisma.BoxCreateWithoutItemInput[] | Prisma.BoxUncheckedCreateWithoutItemInput[]
-  connectOrCreate?: Prisma.BoxCreateOrConnectWithoutItemInput | Prisma.BoxCreateOrConnectWithoutItemInput[]
-  createMany?: Prisma.BoxCreateManyItemInputEnvelope
-  connect?: Prisma.BoxWhereUniqueInput | Prisma.BoxWhereUniqueInput[]
-}
-
-export type BoxUncheckedCreateNestedManyWithoutItemInput = {
-  create?: Prisma.XOR<Prisma.BoxCreateWithoutItemInput, Prisma.BoxUncheckedCreateWithoutItemInput> | Prisma.BoxCreateWithoutItemInput[] | Prisma.BoxUncheckedCreateWithoutItemInput[]
-  connectOrCreate?: Prisma.BoxCreateOrConnectWithoutItemInput | Prisma.BoxCreateOrConnectWithoutItemInput[]
-  createMany?: Prisma.BoxCreateManyItemInputEnvelope
-  connect?: Prisma.BoxWhereUniqueInput | Prisma.BoxWhereUniqueInput[]
-}
-
-export type BoxUpdateManyWithoutItemNestedInput = {
-  create?: Prisma.XOR<Prisma.BoxCreateWithoutItemInput, Prisma.BoxUncheckedCreateWithoutItemInput> | Prisma.BoxCreateWithoutItemInput[] | Prisma.BoxUncheckedCreateWithoutItemInput[]
-  connectOrCreate?: Prisma.BoxCreateOrConnectWithoutItemInput | Prisma.BoxCreateOrConnectWithoutItemInput[]
-  upsert?: Prisma.BoxUpsertWithWhereUniqueWithoutItemInput | Prisma.BoxUpsertWithWhereUniqueWithoutItemInput[]
-  createMany?: Prisma.BoxCreateManyItemInputEnvelope
-  set?: Prisma.BoxWhereUniqueInput | Prisma.BoxWhereUniqueInput[]
-  disconnect?: Prisma.BoxWhereUniqueInput | Prisma.BoxWhereUniqueInput[]
-  delete?: Prisma.BoxWhereUniqueInput | Prisma.BoxWhereUniqueInput[]
-  connect?: Prisma.BoxWhereUniqueInput | Prisma.BoxWhereUniqueInput[]
-  update?: Prisma.BoxUpdateWithWhereUniqueWithoutItemInput | Prisma.BoxUpdateWithWhereUniqueWithoutItemInput[]
-  updateMany?: Prisma.BoxUpdateManyWithWhereWithoutItemInput | Prisma.BoxUpdateManyWithWhereWithoutItemInput[]
-  deleteMany?: Prisma.BoxScalarWhereInput | Prisma.BoxScalarWhereInput[]
-}
-
-export type BoxUncheckedUpdateManyWithoutItemNestedInput = {
-  create?: Prisma.XOR<Prisma.BoxCreateWithoutItemInput, Prisma.BoxUncheckedCreateWithoutItemInput> | Prisma.BoxCreateWithoutItemInput[] | Prisma.BoxUncheckedCreateWithoutItemInput[]
-  connectOrCreate?: Prisma.BoxCreateOrConnectWithoutItemInput | Prisma.BoxCreateOrConnectWithoutItemInput[]
-  upsert?: Prisma.BoxUpsertWithWhereUniqueWithoutItemInput | Prisma.BoxUpsertWithWhereUniqueWithoutItemInput[]
-  createMany?: Prisma.BoxCreateManyItemInputEnvelope
-  set?: Prisma.BoxWhereUniqueInput | Prisma.BoxWhereUniqueInput[]
-  disconnect?: Prisma.BoxWhereUniqueInput | Prisma.BoxWhereUniqueInput[]
-  delete?: Prisma.BoxWhereUniqueInput | Prisma.BoxWhereUniqueInput[]
-  connect?: Prisma.BoxWhereUniqueInput | Prisma.BoxWhereUniqueInput[]
-  update?: Prisma.BoxUpdateWithWhereUniqueWithoutItemInput | Prisma.BoxUpdateWithWhereUniqueWithoutItemInput[]
-  updateMany?: Prisma.BoxUpdateManyWithWhereWithoutItemInput | Prisma.BoxUpdateManyWithWhereWithoutItemInput[]
-  deleteMany?: Prisma.BoxScalarWhereInput | Prisma.BoxScalarWhereInput[]
+export type BoxUpdateOneRequiredWithoutBoxItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.BoxCreateWithoutBoxItemsInput, Prisma.BoxUncheckedCreateWithoutBoxItemsInput>
+  connectOrCreate?: Prisma.BoxCreateOrConnectWithoutBoxItemsInput
+  upsert?: Prisma.BoxUpsertWithoutBoxItemsInput
+  connect?: Prisma.BoxWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BoxUpdateToOneWithWhereWithoutBoxItemsInput, Prisma.BoxUpdateWithoutBoxItemsInput>, Prisma.BoxUncheckedUpdateWithoutBoxItemsInput>
 }
 
 export type BoolFieldUpdateOperationsInput = {
@@ -433,7 +378,7 @@ export type BoxUpdateOneRequiredWithoutTxnsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BoxUpdateToOneWithWhereWithoutTxnsInput, Prisma.BoxUpdateWithoutTxnsInput>, Prisma.BoxUncheckedUpdateWithoutTxnsInput>
 }
 
-export type BoxCreateWithoutItemInput = {
+export type BoxCreateWithoutBoxItemsInput = {
   id?: string
   label: string
   token: string
@@ -443,7 +388,7 @@ export type BoxCreateWithoutItemInput = {
   txns?: Prisma.TransactionCreateNestedManyWithoutBoxInput
 }
 
-export type BoxUncheckedCreateWithoutItemInput = {
+export type BoxUncheckedCreateWithoutBoxItemsInput = {
   id?: string
   label: string
   token: string
@@ -453,43 +398,40 @@ export type BoxUncheckedCreateWithoutItemInput = {
   txns?: Prisma.TransactionUncheckedCreateNestedManyWithoutBoxInput
 }
 
-export type BoxCreateOrConnectWithoutItemInput = {
+export type BoxCreateOrConnectWithoutBoxItemsInput = {
   where: Prisma.BoxWhereUniqueInput
-  create: Prisma.XOR<Prisma.BoxCreateWithoutItemInput, Prisma.BoxUncheckedCreateWithoutItemInput>
+  create: Prisma.XOR<Prisma.BoxCreateWithoutBoxItemsInput, Prisma.BoxUncheckedCreateWithoutBoxItemsInput>
 }
 
-export type BoxCreateManyItemInputEnvelope = {
-  data: Prisma.BoxCreateManyItemInput | Prisma.BoxCreateManyItemInput[]
-  skipDuplicates?: boolean
+export type BoxUpsertWithoutBoxItemsInput = {
+  update: Prisma.XOR<Prisma.BoxUpdateWithoutBoxItemsInput, Prisma.BoxUncheckedUpdateWithoutBoxItemsInput>
+  create: Prisma.XOR<Prisma.BoxCreateWithoutBoxItemsInput, Prisma.BoxUncheckedCreateWithoutBoxItemsInput>
+  where?: Prisma.BoxWhereInput
 }
 
-export type BoxUpsertWithWhereUniqueWithoutItemInput = {
-  where: Prisma.BoxWhereUniqueInput
-  update: Prisma.XOR<Prisma.BoxUpdateWithoutItemInput, Prisma.BoxUncheckedUpdateWithoutItemInput>
-  create: Prisma.XOR<Prisma.BoxCreateWithoutItemInput, Prisma.BoxUncheckedCreateWithoutItemInput>
+export type BoxUpdateToOneWithWhereWithoutBoxItemsInput = {
+  where?: Prisma.BoxWhereInput
+  data: Prisma.XOR<Prisma.BoxUpdateWithoutBoxItemsInput, Prisma.BoxUncheckedUpdateWithoutBoxItemsInput>
 }
 
-export type BoxUpdateWithWhereUniqueWithoutItemInput = {
-  where: Prisma.BoxWhereUniqueInput
-  data: Prisma.XOR<Prisma.BoxUpdateWithoutItemInput, Prisma.BoxUncheckedUpdateWithoutItemInput>
+export type BoxUpdateWithoutBoxItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  token?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  txns?: Prisma.TransactionUpdateManyWithoutBoxNestedInput
 }
 
-export type BoxUpdateManyWithWhereWithoutItemInput = {
-  where: Prisma.BoxScalarWhereInput
-  data: Prisma.XOR<Prisma.BoxUpdateManyMutationInput, Prisma.BoxUncheckedUpdateManyWithoutItemInput>
-}
-
-export type BoxScalarWhereInput = {
-  AND?: Prisma.BoxScalarWhereInput | Prisma.BoxScalarWhereInput[]
-  OR?: Prisma.BoxScalarWhereInput[]
-  NOT?: Prisma.BoxScalarWhereInput | Prisma.BoxScalarWhereInput[]
-  id?: Prisma.StringFilter<"Box"> | string
-  label?: Prisma.StringFilter<"Box"> | string
-  token?: Prisma.StringFilter<"Box"> | string
-  itemId?: Prisma.StringFilter<"Box"> | string
-  active?: Prisma.BoolFilter<"Box"> | boolean
-  createdAt?: Prisma.DateTimeFilter<"Box"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Box"> | Date | string
+export type BoxUncheckedUpdateWithoutBoxItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  token?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  txns?: Prisma.TransactionUncheckedUpdateManyWithoutBoxNestedInput
 }
 
 export type BoxCreateWithoutTxnsInput = {
@@ -499,17 +441,17 @@ export type BoxCreateWithoutTxnsInput = {
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  item: Prisma.ItemCreateNestedOneWithoutBoxesInput
+  boxItems?: Prisma.BoxItemCreateNestedManyWithoutBoxInput
 }
 
 export type BoxUncheckedCreateWithoutTxnsInput = {
   id?: string
   label: string
   token: string
-  itemId: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  boxItems?: Prisma.BoxItemUncheckedCreateNestedManyWithoutBoxInput
 }
 
 export type BoxCreateOrConnectWithoutTxnsInput = {
@@ -535,55 +477,17 @@ export type BoxUpdateWithoutTxnsInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  item?: Prisma.ItemUpdateOneRequiredWithoutBoxesNestedInput
+  boxItems?: Prisma.BoxItemUpdateManyWithoutBoxNestedInput
 }
 
 export type BoxUncheckedUpdateWithoutTxnsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
-  itemId?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type BoxCreateManyItemInput = {
-  id?: string
-  label: string
-  token: string
-  active?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type BoxUpdateWithoutItemInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  label?: Prisma.StringFieldUpdateOperationsInput | string
-  token?: Prisma.StringFieldUpdateOperationsInput | string
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  txns?: Prisma.TransactionUpdateManyWithoutBoxNestedInput
-}
-
-export type BoxUncheckedUpdateWithoutItemInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  label?: Prisma.StringFieldUpdateOperationsInput | string
-  token?: Prisma.StringFieldUpdateOperationsInput | string
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  txns?: Prisma.TransactionUncheckedUpdateManyWithoutBoxNestedInput
-}
-
-export type BoxUncheckedUpdateManyWithoutItemInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  label?: Prisma.StringFieldUpdateOperationsInput | string
-  token?: Prisma.StringFieldUpdateOperationsInput | string
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  boxItems?: Prisma.BoxItemUncheckedUpdateManyWithoutBoxNestedInput
 }
 
 
@@ -592,10 +496,12 @@ export type BoxUncheckedUpdateManyWithoutItemInput = {
  */
 
 export type BoxCountOutputType = {
+  boxItems: number
   txns: number
 }
 
 export type BoxCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  boxItems?: boolean | BoxCountOutputTypeCountBoxItemsArgs
   txns?: boolean | BoxCountOutputTypeCountTxnsArgs
 }
 
@@ -612,6 +518,13 @@ export type BoxCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensio
 /**
  * BoxCountOutputType without action
  */
+export type BoxCountOutputTypeCountBoxItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BoxItemWhereInput
+}
+
+/**
+ * BoxCountOutputType without action
+ */
 export type BoxCountOutputTypeCountTxnsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TransactionWhereInput
 }
@@ -621,11 +534,10 @@ export type BoxSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   id?: boolean
   label?: boolean
   token?: boolean
-  itemId?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  item?: boolean | Prisma.ItemDefaultArgs<ExtArgs>
+  boxItems?: boolean | Prisma.Box$boxItemsArgs<ExtArgs>
   txns?: boolean | Prisma.Box$txnsArgs<ExtArgs>
   _count?: boolean | Prisma.BoxCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["box"]>
@@ -634,58 +546,48 @@ export type BoxSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
   id?: boolean
   label?: boolean
   token?: boolean
-  itemId?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  item?: boolean | Prisma.ItemDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["box"]>
 
 export type BoxSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   label?: boolean
   token?: boolean
-  itemId?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  item?: boolean | Prisma.ItemDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["box"]>
 
 export type BoxSelectScalar = {
   id?: boolean
   label?: boolean
   token?: boolean
-  itemId?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type BoxOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "label" | "token" | "itemId" | "active" | "createdAt" | "updatedAt", ExtArgs["result"]["box"]>
+export type BoxOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "label" | "token" | "active" | "createdAt" | "updatedAt", ExtArgs["result"]["box"]>
 export type BoxInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  item?: boolean | Prisma.ItemDefaultArgs<ExtArgs>
+  boxItems?: boolean | Prisma.Box$boxItemsArgs<ExtArgs>
   txns?: boolean | Prisma.Box$txnsArgs<ExtArgs>
   _count?: boolean | Prisma.BoxCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type BoxIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  item?: boolean | Prisma.ItemDefaultArgs<ExtArgs>
-}
-export type BoxIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  item?: boolean | Prisma.ItemDefaultArgs<ExtArgs>
-}
+export type BoxIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type BoxIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $BoxPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Box"
   objects: {
-    item: Prisma.$ItemPayload<ExtArgs>
+    boxItems: Prisma.$BoxItemPayload<ExtArgs>[]
     txns: Prisma.$TransactionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     label: string
     token: string
-    itemId: string
     active: boolean
     createdAt: Date
     updatedAt: Date
@@ -1083,7 +985,7 @@ readonly fields: BoxFieldRefs;
  */
 export interface Prisma__BoxClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  item<T extends Prisma.ItemDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ItemDefaultArgs<ExtArgs>>): Prisma.Prisma__ItemClient<runtime.Types.Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  boxItems<T extends Prisma.Box$boxItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Box$boxItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BoxItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   txns<T extends Prisma.Box$txnsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Box$txnsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1117,7 +1019,6 @@ export interface BoxFieldRefs {
   readonly id: Prisma.FieldRef<"Box", 'String'>
   readonly label: Prisma.FieldRef<"Box", 'String'>
   readonly token: Prisma.FieldRef<"Box", 'String'>
-  readonly itemId: Prisma.FieldRef<"Box", 'String'>
   readonly active: Prisma.FieldRef<"Box", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Box", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Box", 'DateTime'>
@@ -1370,10 +1271,6 @@ export type BoxCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.
    */
   data: Prisma.BoxCreateManyInput | Prisma.BoxCreateManyInput[]
   skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.BoxIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1444,10 +1341,6 @@ export type BoxUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many Boxes to update.
    */
   limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.BoxIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1514,6 +1407,30 @@ export type BoxDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Limit how many Boxes to delete.
    */
   limit?: number
+}
+
+/**
+ * Box.boxItems
+ */
+export type Box$boxItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BoxItem
+   */
+  select?: Prisma.BoxItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BoxItem
+   */
+  omit?: Prisma.BoxItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BoxItemInclude<ExtArgs> | null
+  where?: Prisma.BoxItemWhereInput
+  orderBy?: Prisma.BoxItemOrderByWithRelationInput | Prisma.BoxItemOrderByWithRelationInput[]
+  cursor?: Prisma.BoxItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BoxItemScalarFieldEnum | Prisma.BoxItemScalarFieldEnum[]
 }
 
 /**

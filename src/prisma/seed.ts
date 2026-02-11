@@ -16,14 +16,42 @@ async function main() {
 
   await prisma.box.upsert({
     where: { token: "X7kP29dL" },
-    update: { label: "Van 2 • Drawer 3", itemId: item1.id, active: true },
-    create: { token: "X7kP29dL", label: "Van 2 • Drawer 3", itemId: item1.id },
+    update: {
+      label: "Van 2 • Drawer 3",
+      active: true,
+      boxItems: {
+        deleteMany: {},
+        create: [{ itemId: item1.id }],
+      },
+    },
+    create: {
+      token: "X7kP29dL",
+      label: "Van 2 • Drawer 3",
+      boxItems: { create: [{ itemId: item1.id }] },
+    },
   });
 
   await prisma.box.upsert({
     where: { token: "A1B2C3D4" },
-    update: { label: "Stores • Shelf A • Box 4", itemId: item2.id, active: true },
-    create: { token: "A1B2C3D4", label: "Stores • Shelf A • Box 4", itemId: item2.id },
+    update: {
+      label: "Stores • Shelf A • Box 4",
+      active: true,
+      boxItems: {
+        deleteMany: {},
+        create: [{ itemId: item2.id }],
+      },
+    },
+    create: {
+      token: "A1B2C3D4",
+      label: "Stores • Shelf A • Box 4",
+      boxItems: { create: [{ itemId: item2.id }] },
+    },
+  });
+
+  await prisma.appConfig.upsert({
+    where: { id: "default" },
+    create: { id: "default", editWindowMinutes: 10 },
+    update: {},
   });
 
   const adminEmail = "admin@example.com";

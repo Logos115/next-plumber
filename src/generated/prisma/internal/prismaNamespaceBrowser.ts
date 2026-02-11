@@ -53,8 +53,12 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Note: 'Note',
   Item: 'Item',
+  BoxItem: 'BoxItem',
   Box: 'Box',
   Transaction: 'Transaction',
+  TransactionEditAudit: 'TransactionEditAudit',
+  ActionAudit: 'ActionAudit',
+  AppConfig: 'AppConfig',
   AdminUser: 'AdminUser'
 } as const
 
@@ -97,11 +101,20 @@ export const ItemScalarFieldEnum = {
 export type ItemScalarFieldEnum = (typeof ItemScalarFieldEnum)[keyof typeof ItemScalarFieldEnum]
 
 
+export const BoxItemScalarFieldEnum = {
+  id: 'id',
+  boxId: 'boxId',
+  itemId: 'itemId',
+  createdAt: 'createdAt'
+} as const
+
+export type BoxItemScalarFieldEnum = (typeof BoxItemScalarFieldEnum)[keyof typeof BoxItemScalarFieldEnum]
+
+
 export const BoxScalarFieldEnum = {
   id: 'id',
   label: 'label',
   token: 'token',
-  itemId: 'itemId',
   active: 'active',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -125,6 +138,53 @@ export const TransactionScalarFieldEnum = {
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
 
 
+export const TransactionEditAuditScalarFieldEnum = {
+  id: 'id',
+  transactionId: 'transactionId',
+  oldType: 'oldType',
+  oldQuantity: 'oldQuantity',
+  oldJobNumber: 'oldJobNumber',
+  oldDeviceId: 'oldDeviceId',
+  newType: 'newType',
+  newQuantity: 'newQuantity',
+  newJobNumber: 'newJobNumber',
+  newDeviceId: 'newDeviceId',
+  actorAdminId: 'actorAdminId',
+  actorEmail: 'actorEmail',
+  actorDeviceId: 'actorDeviceId',
+  editedAt: 'editedAt'
+} as const
+
+export type TransactionEditAuditScalarFieldEnum = (typeof TransactionEditAuditScalarFieldEnum)[keyof typeof TransactionEditAuditScalarFieldEnum]
+
+
+export const ActionAuditScalarFieldEnum = {
+  id: 'id',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  action: 'action',
+  actorType: 'actorType',
+  actorId: 'actorId',
+  actorEmail: 'actorEmail',
+  deviceId: 'deviceId',
+  details: 'details',
+  createdAt: 'createdAt'
+} as const
+
+export type ActionAuditScalarFieldEnum = (typeof ActionAuditScalarFieldEnum)[keyof typeof ActionAuditScalarFieldEnum]
+
+
+export const AppConfigScalarFieldEnum = {
+  id: 'id',
+  editWindowMinutes: 'editWindowMinutes',
+  lowStockAlertsEnabled: 'lowStockAlertsEnabled',
+  lowStockAlertEmail: 'lowStockAlertEmail',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AppConfigScalarFieldEnum = (typeof AppConfigScalarFieldEnum)[keyof typeof AppConfigScalarFieldEnum]
+
+
 export const AdminUserScalarFieldEnum = {
   id: 'id',
   email: 'email',
@@ -145,6 +205,14 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -159,4 +227,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

@@ -24,8 +24,11 @@ export default function AdminLoginPage() {
 
   return (
     <main className="flex min-h-[60vh] items-center justify-center">
-      <section className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        <h1 className="mb-6 text-xl font-bold text-slate-800">Admin Login</h1>
+      <section className="w-full max-w-md overflow-hidden rounded-xl border border-slate-200 bg-white shadow-md ring-1 ring-slate-900/5">
+        <div className="border-b border-slate-200 bg-slate-50/80 px-6 py-5 sm:px-8">
+          <h1 className="text-xl font-bold tracking-tight text-slate-900">Admin Login</h1>
+        </div>
+        <div className="p-6 sm:p-8">
 
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
           <label className="flex flex-col gap-1.5">
@@ -65,6 +68,7 @@ export default function AdminLoginPage() {
             Sign in
           </button>
         </form>
+        </div>
       </section>
     </main>
   );

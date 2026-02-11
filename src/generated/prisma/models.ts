@@ -10,7 +10,11 @@
  */
 export type * from './models/Note'
 export type * from './models/Item'
+export type * from './models/BoxItem'
 export type * from './models/Box'
 export type * from './models/Transaction'
+export type * from './models/TransactionEditAudit'
+export type * from './models/ActionAudit'
+export type * from './models/AppConfig'
 export type * from './models/AdminUser'
 export type * from './commonInputTypes'

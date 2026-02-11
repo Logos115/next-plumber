@@ -28,6 +28,11 @@ export type Note = Prisma.NoteModel
  */
 export type Item = Prisma.ItemModel
 /**
+ * Model BoxItem
+ * Join table: a box can hold one or more items (many-to-many).
+ */
+export type BoxItem = Prisma.BoxItemModel
+/**
  * Model Box
  * 
  */
@@ -37,6 +42,21 @@ export type Box = Prisma.BoxModel
  * 
  */
 export type Transaction = Prisma.TransactionModel
+/**
+ * Model TransactionEditAudit
+ * Audit log for edits to transactions within the editable time window.
+ */
+export type TransactionEditAudit = Prisma.TransactionEditAuditModel
+/**
+ * Model ActionAudit
+ * Audit log for create/edit/delete actions (who changed what, when).
+ */
+export type ActionAudit = Prisma.ActionAuditModel
+/**
+ * Model AppConfig
+ * 
+ */
+export type AppConfig = Prisma.AppConfigModel
 /**
  * Model AdminUser
  * 
