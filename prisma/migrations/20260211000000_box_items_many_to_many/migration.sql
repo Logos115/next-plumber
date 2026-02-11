@@ -9,8 +9,9 @@ CREATE TABLE "BoxItem" (
 );
 
 -- Migrate existing Box.itemId into BoxItem (one row per box)
+-- Uses substr(md5(...)) for IDs (no extension required; works on all PostgreSQL versions)
 INSERT INTO "BoxItem" ("id", "boxId", "itemId", "createdAt")
-SELECT gen_random_uuid()::text, "id", "itemId", "createdAt"
+SELECT substr(md5(random()::text || clock_timestamp()::text), 1, 25), "id", "itemId", "createdAt"
 FROM "Box"
 WHERE "itemId" IS NOT NULL;
 
