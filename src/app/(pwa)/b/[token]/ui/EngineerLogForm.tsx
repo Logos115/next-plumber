@@ -261,7 +261,7 @@ export default function EngineerLogForm({ token }: { token: string }) {
               disabled={!canEdit}
               className={`flex-1 text-base font-bold py-3.5 px-4 rounded-xl border-0 cursor-pointer transition-all ${
                 canEdit
-                  ? "bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 hover:bg-slate-700 dark:hover:bg-slate-300"
+                  ? "bg-indigo-600 text-white hover:bg-indigo-700"
                   : "bg-slate-300 dark:bg-slate-600 text-slate-500 dark:text-slate-400 cursor-not-allowed"
               }`}
             >
@@ -298,7 +298,7 @@ export default function EngineerLogForm({ token }: { token: string }) {
           <button
             type="button"
             onClick={resetForAnother}
-            className="w-full text-base font-bold py-3.5 px-4 rounded-xl bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 hover:bg-slate-700 dark:hover:bg-slate-300 transition-colors cursor-pointer"
+            className="w-full text-base font-bold py-3.5 px-4 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-colors cursor-pointer"
           >
             Log another
           </button>
@@ -319,7 +319,7 @@ export default function EngineerLogForm({ token }: { token: string }) {
           <select
             value={selectedItemId}
             onChange={(e) => setSelectedItemId(e.target.value)}
-            className="mt-1 block w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-3 py-2 focus:ring-2 focus:ring-slate-400"
+            className="mt-1 block w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-400"
           >
             {boxData.items.map((i) => (
               <option key={i.id} value={i.id}>
@@ -339,7 +339,7 @@ export default function EngineerLogForm({ token }: { token: string }) {
           Job number
           <input
             ref={jobRef}
-            className="text-lg px-3 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 dark:focus:ring-slate-500 focus:border-transparent transition-shadow"
+            className="text-lg px-3 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-400 transition-shadow"
             inputMode="text"
             placeholder="e.g. T-10482"
             value={jobNumber}
@@ -380,7 +380,7 @@ export default function EngineerLogForm({ token }: { token: string }) {
           disabled={!canSubmit}
           className={`w-full text-base font-bold py-3.5 px-4 rounded-xl border-0 cursor-pointer transition-all ${
             canSubmit
-              ? "bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 hover:bg-slate-700 dark:hover:bg-slate-300 hover:shadow-lg active:scale-[0.99]"
+              ? "bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-lg active:scale-[0.99]"
               : "bg-slate-300 dark:bg-slate-600 text-slate-500 dark:text-slate-400 cursor-not-allowed"
           }`}
         >
