@@ -12,16 +12,17 @@ export async function PATCH(
   if (!session) return NextResponse.json("Unauthorized", { status: 401 });
 
   const { id } = await params;
-  let body: { name?: string; unit?: string; minStock?: number | null };
+  let body: { name?: string; unit?: string; minStock?: number | null | string };
   try {
     body = (await req.json()) as typeof body;
   } catch {
     return NextResponse.json("Invalid JSON", { status: 400 });
   }
 
-  const data: { name?: string; unit?: string; minStock?: number | null } = {};
+  const data: { name?: string; unit?: "EACH" | "METRE" | "BOX"; minStock?: number | null } = {};
   if (body.name !== undefined) data.name = String(body.name).trim();
-  if (body.unit !== undefined) data.unit = body.unit;
+  if (body.unit !== undefined && (body.unit === "EACH" || body.unit === "METRE" || body.unit === "BOX"))
+    data.unit = body.unit;
   if (body.minStock !== undefined)
     data.minStock =
       body.minStock === null || body.minStock === ""

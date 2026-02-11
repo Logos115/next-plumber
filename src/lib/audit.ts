@@ -1,4 +1,4 @@
-import type { PrismaClient } from "@/generated/prisma/client";
+import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 
 type Actor = {
@@ -19,7 +19,7 @@ type AuditParams = {
 /** Log an action for audit trail. Pass tx when inside a Prisma transaction. */
 export async function logAction(
   params: AuditParams,
-  tx?: Omit<PrismaClient, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use">
+  tx?: Prisma.TransactionClient
 ): Promise<void> {
   const db = tx ?? prisma;
   try {
@@ -32,7 +32,7 @@ export async function logAction(
         actorId: params.actor.adminId ?? null,
         actorEmail: params.actor.email ?? null,
         deviceId: params.actor.deviceId ?? null,
-        details: params.details ? (params.details as object) : null,
+        details: params.details ? (params.details as object) : Prisma.DbNull,
       },
     });
   } catch (err) {
