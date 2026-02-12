@@ -17,6 +17,11 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [sendingAlert, setSendingAlert] = useState(false);
   const [message, setMessage] = useState<string>("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState("");
 
   async function load() {
     try {
@@ -58,6 +63,42 @@ export default function SettingsPage() {
       setMessage("Could not send test alert.");
     } finally {
       setSendingAlert(false);
+    }
+  }
+
+  async function changePassword(e: React.FormEvent) {
+    e.preventDefault();
+    setPasswordMessage("");
+    if (newPassword !== confirmPassword) {
+      setPasswordMessage("New password and confirmation do not match.");
+      return;
+    }
+    if (newPassword.length < 8) {
+      setPasswordMessage("New password must be at least 8 characters.");
+      return;
+    }
+    setChangingPassword(true);
+    try {
+      const res = await fetch("/api/admin/password", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+        }),
+      });
+      const text = await res.text();
+      if (!res.ok) throw new Error(text || "Failed to change password");
+      setPasswordMessage("Password changed successfully.");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err) {
+      setPasswordMessage(
+        err instanceof Error ? err.message : "Could not change password."
+      );
+    } finally {
+      setChangingPassword(false);
     }
   }
 
@@ -144,6 +185,74 @@ export default function SettingsPage() {
             {message}
           </p>
         )}
+        </div>
+      </section>
+
+      <section className="mb-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-900/5">
+        <div className="border-b border-slate-200 bg-slate-50/80 px-5 py-4">
+          <h2 className="text-lg font-semibold text-slate-800">Change password</h2>
+        </div>
+        <div className="p-5">
+          <form onSubmit={changePassword} className="flex flex-col gap-4 max-w-sm">
+            <label className="flex flex-col gap-1">
+              <span className="text-xs font-medium text-slate-500">
+                Current password
+              </span>
+              <input
+                type="password"
+                autoComplete="current-password"
+                className="rounded-lg border border-slate-300 px-3 py-2 text-slate-800 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                required
+              />
+            </label>
+            <label className="flex flex-col gap-1">
+              <span className="text-xs font-medium text-slate-500">
+                New password
+              </span>
+              <input
+                type="password"
+                autoComplete="new-password"
+                minLength={8}
+                className="rounded-lg border border-slate-300 px-3 py-2 text-slate-800 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+              />
+            </label>
+            <label className="flex flex-col gap-1">
+              <span className="text-xs font-medium text-slate-500">
+                Confirm new password
+              </span>
+              <input
+                type="password"
+                autoComplete="new-password"
+                className="rounded-lg border border-slate-300 px-3 py-2 text-slate-800 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </label>
+            <button
+              type="submit"
+              disabled={changingPassword}
+              className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-60 self-start"
+            >
+              {changingPassword ? "Changing…" : "Change password"}
+            </button>
+            {passwordMessage && (
+              <p
+                className={`text-sm ${
+                  passwordMessage.includes("successfully")
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}
+              >
+                {passwordMessage}
+              </p>
+            )}
+          </form>
         </div>
       </section>
 

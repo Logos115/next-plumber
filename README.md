@@ -55,6 +55,10 @@ A Next.js app for field engineers to log stock usage from physical boxes (e.g. v
 
    Open [http://localhost:3000](http://localhost:3000). Use **Admin** for the dashboard; engineers use links like `http://localhost:3000/b/<box-token>`.
 
+## Documentation
+
+- **[Admin How-to Guide](docs/ADMIN-HOW-TO.md)** — Step-by-step usage of each admin page.
+
 ## Project layout
 
 - `/` — Home (links to admin and explains box links)
