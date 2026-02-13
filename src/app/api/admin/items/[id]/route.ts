@@ -63,7 +63,15 @@ export async function DELETE(
     return NextResponse.json({ error: "Item not found" }, { status: 404 });
   }
 
-  await prisma.item.delete({ where: { id } });
+  try {
+    await prisma.item.delete({ where: { id } });
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "Database constraint prevented deletion";
+    return NextResponse.json(
+      { error: msg.includes("foreign key") ? "Item is in use. Run database migrations (npx prisma migrate deploy) to enable deletion of items with transactions." : msg },
+      { status: 409 }
+    );
+  }
 
   await logAction({
     entityType: "Item",
