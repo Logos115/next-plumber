@@ -59,9 +59,11 @@ export async function DELETE(
   const { id } = await params;
   const item = await prisma.item.findUnique({ where: { id }, select: { name: true } });
 
-  await prisma.item.delete({
-    where: { id },
-  });
+  if (!item) {
+    return NextResponse.json({ error: "Item not found" }, { status: 404 });
+  }
+
+  await prisma.item.delete({ where: { id } });
 
   await logAction({
     entityType: "Item",
@@ -72,7 +74,7 @@ export async function DELETE(
       adminId: session.user?.id,
       email: session.user?.email ?? undefined,
     },
-    details: item ? { name: item.name } : undefined,
+    details: { name: item.name },
   });
 
   return NextResponse.json({ ok: true });

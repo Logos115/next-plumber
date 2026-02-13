@@ -15,6 +15,8 @@ export default function ItemsPage() {
   const [name, setName] = useState("");
   const [unit, setUnit] = useState("EACH");
   const [minStock, setMinStock] = useState<number | "">("");
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   async function load() {
     const res = await fetch("/api/admin/items");
@@ -54,13 +56,74 @@ export default function ItemsPage() {
     if (res.ok) load();
   }
 
-  async function deleteItem(id: string) {
-    await fetch(`/api/admin/items/${id}`, { method: "DELETE" });
-    load();
+  function confirmDelete(id: string, name: string) {
+    setDeleteTarget({ id, name });
+    setDeleteError(null);
+  }
+
+  function closeDeleteModal() {
+    setDeleteTarget(null);
+    setDeleteError(null);
+  }
+
+  async function executeDelete() {
+    if (!deleteTarget) return;
+    const { id } = deleteTarget;
+    setDeleteError(null);
+    const res = await fetch(`/api/admin/items/${id}`, { method: "DELETE" });
+    if (res.ok) {
+      closeDeleteModal();
+      load();
+    } else {
+      const data = await res.json().catch(() => ({}));
+      setDeleteError(data.error ?? "Failed to delete item.");
+    }
   }
 
   return (
     <main>
+      {deleteTarget && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-dialog-title"
+          onClick={closeDeleteModal}
+        >
+          <div
+            className="w-full max-w-sm rounded-xl border border-slate-200 bg-white p-6 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 id="delete-dialog-title" className="text-lg font-semibold text-slate-900">
+              Delete item?
+            </h2>
+            <p className="mt-2 text-slate-600">
+              Delete &quot;{deleteTarget.name}&quot;? This cannot be undone.
+            </p>
+            {deleteError && (
+              <p className="mt-3 rounded-lg bg-red-50 p-3 text-sm text-red-800">
+                {deleteError}
+              </p>
+            )}
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={closeDeleteModal}
+                className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={executeDelete}
+                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="mb-8">
         <h1 className="text-2xl font-bold tracking-tight text-slate-900">Items</h1>
         <p className="mt-1 text-sm text-slate-500">Manage inventory items</p>
@@ -191,7 +254,7 @@ export default function ItemsPage() {
                   <td className="px-5 py-3 text-right">
                     <button
                       type="button"
-                      onClick={() => deleteItem(i.id)}
+                      onClick={() => confirmDelete(i.id, i.name)}
                       className="rounded-md px-2.5 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                     >
                       Delete

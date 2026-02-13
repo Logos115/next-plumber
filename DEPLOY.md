@@ -207,5 +207,5 @@ Use `host.docker.internal` (Linux Docker 20.10+) or your host IP for `DATABASE_U
 **Admin login works locally but fails remotely**:
 - Ensure `NEXTAUTH_URL` is set to your production URL (e.g. `https://yourdomain.com`) — not `http://localhost:3000`
 - Ensure `NEXTAUTH_SECRET` is set in production env vars
-- Run `npx prisma db seed` on the remote DB to create the admin user (admin@example.com / ChangeMe123!)
+- Run `npx prisma db seed` on the remote DB to create the admin user (admin@stockpod.co.uk / ChangeMe123!)
 - Verify the remote DB has the AdminUser table and data: `npx prisma migrate deploy` first, then seed

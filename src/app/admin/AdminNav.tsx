@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { useState } from "react";
 
 const navLinks = [
@@ -66,14 +67,23 @@ export function AdminNav() {
               Login
             </span>
           ) : (
-            navLinks.map((link) => (
-              <NavLink
-                key={link.href}
-                href={link.href}
-                label={link.label}
-                isActive={isActive(link.href)}
-              />
-            ))
+            <>
+              {navLinks.map((link) => (
+                <NavLink
+                  key={link.href}
+                  href={link.href}
+                  label={link.label}
+                  isActive={isActive(link.href)}
+                />
+              ))}
+              <button
+                type="button"
+                onClick={() => signOut({ callbackUrl: "/admin/login" })}
+                className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+              >
+                Logout
+              </button>
+            </>
           )}
         </nav>
 
@@ -125,6 +135,16 @@ export function AdminNav() {
                 onClick={() => setMenuOpen(false)}
               />
             ))}
+            <button
+              type="button"
+              onClick={() => {
+                setMenuOpen(false);
+                signOut({ callbackUrl: "/admin/login" });
+              }}
+              className="block rounded-lg px-3 py-2 text-left text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+            >
+              Logout
+            </button>
           </div>
         </nav>
       )}

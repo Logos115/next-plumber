@@ -15,6 +15,8 @@ export default function BoxesPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editLabel, setEditLabel] = useState("");
   const [editItemIds, setEditItemIds] = useState<string[]>([]);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; label: string } | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   async function load() {
     const [b, i] = await Promise.all([
@@ -66,10 +68,28 @@ export default function BoxesPage() {
     load();
   }
 
-  async function deleteBox(id: string) {
-    if (!confirm("Delete this box? QR link will stop working.")) return;
-    await fetch(`/api/admin/boxes/${id}`, { method: "DELETE" });
-    load();
+  function confirmDelete(id: string, label: string) {
+    setDeleteTarget({ id, label });
+    setDeleteError(null);
+  }
+
+  function closeDeleteModal() {
+    setDeleteTarget(null);
+    setDeleteError(null);
+  }
+
+  async function executeDelete() {
+    if (!deleteTarget) return;
+    const { id } = deleteTarget;
+    setDeleteError(null);
+    const res = await fetch(`/api/admin/boxes/${id}`, { method: "DELETE" });
+    if (res.ok) {
+      closeDeleteModal();
+      load();
+    } else {
+      const data = await res.json().catch(() => ({}));
+      setDeleteError(data.error ?? "Failed to delete box.");
+    }
   }
 
   function toggleCreateItem(id: string) {
@@ -86,6 +106,48 @@ export default function BoxesPage() {
 
   return (
     <main>
+      {deleteTarget && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-box-dialog-title"
+          onClick={closeDeleteModal}
+        >
+          <div
+            className="w-full max-w-sm rounded-xl border border-slate-200 bg-white p-6 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 id="delete-box-dialog-title" className="text-lg font-semibold text-slate-900">
+              Delete box?
+            </h2>
+            <p className="mt-2 text-slate-600">
+              Delete &quot;{deleteTarget.label}&quot;? The QR link will stop working. This cannot be undone.
+            </p>
+            {deleteError && (
+              <p className="mt-3 rounded-lg bg-red-50 p-3 text-sm text-red-800">
+                {deleteError}
+              </p>
+            )}
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={closeDeleteModal}
+                className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={executeDelete}
+                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="mb-8">
         <h1 className="text-2xl font-bold tracking-tight text-slate-900">Boxes</h1>
         <p className="mt-1 text-sm text-slate-500">Manage boxes and QR links</p>
@@ -256,7 +318,7 @@ export default function BoxesPage() {
                       </button>
                       <button
                         type="button"
-                        onClick={() => deleteBox(b.id)}
+                        onClick={() => confirmDelete(b.id, b.label)}
                         className="text-sm text-red-600 hover:underline"
                       >
                         Delete

@@ -291,7 +291,7 @@ export default function SettingsPage() {
             </span>
             <input
               type="email"
-              placeholder="admin@example.com"
+              placeholder="admin@stockpod.co.uk"
               className="w-64 rounded-lg border border-slate-300 px-3 py-2 text-slate-800 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
               value={lowStockAlertEmail}
               onChange={(e) => setLowStockAlertEmail(e.target.value)}

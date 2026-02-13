@@ -54,7 +54,7 @@ async function main() {
     update: {},
   });
 
-  const adminEmail = "admin@example.com";
+  const adminEmail = "admin@stockpod.co.uk";
   const adminPassword = "ChangeMe123!";
 
   const passwordHash = await bcrypt.hash(adminPassword, 10);
