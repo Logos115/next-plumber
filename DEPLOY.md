@@ -59,6 +59,7 @@ NEXTAUTH_URL="https://yourdomain.com"
 EDIT_WINDOW_MINUTES=10
 # RESEND_API_KEY=re_xxxx
 # ALERT_FROM_EMAIL=alerts@yourdomain.com
+# CRON_SECRET=your-secret   # for scheduled low-stock alerts (see docs/CRON.md)
 ```
 
 Generate `NEXTAUTH_SECRET`:

@@ -1,22 +1,20 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { getLowStockItems } from "@/lib/low-stock-alert";
 import { prisma } from "@/lib/prisma";
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
   if (!session) return null;
 
-  const items = await prisma.item.findMany({
-    select: { id: true, name: true, unit: true, currentStock: true, minStock: true },
-    orderBy: { name: "asc" },
-  });
-
-  const lowStock = items.filter(
-    (i) =>
-      (i.minStock !== null && i.currentStock <= i.minStock) ||
-      i.currentStock < 0
-  );
+  const [lowStock, items] = await Promise.all([
+    getLowStockItems(),
+    prisma.item.findMany({
+      select: { id: true, name: true, unit: true, currentStock: true, minStock: true },
+      orderBy: { name: "asc" },
+    }),
+  ]);
 
   return (
     <main>

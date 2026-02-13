@@ -38,6 +38,8 @@ A Next.js app for field engineers to log stock usage from physical boxes (e.g. v
    # Optional: for low-stock email alerts (Settings → enable + recipient). Uses Resend.
    # RESEND_API_KEY=re_xxxx
    # ALERT_FROM_EMAIL=alerts@yourdomain.com   # must be a verified domain in Resend
+   # Optional: for scheduled low-stock alerts via cron (see docs/CRON.md)
+   # CRON_SECRET=your-secret-for-cron-auth
    ```
 
 3. **Database**
@@ -58,6 +60,7 @@ A Next.js app for field engineers to log stock usage from physical boxes (e.g. v
 ## Documentation
 
 - **[Admin How-to Guide](docs/ADMIN-HOW-TO.md)** — Step-by-step usage of each admin page.
+- **[Cron Setup](docs/CRON.md)** — Scheduled low-stock email alerts.
 
 ## Project layout
 

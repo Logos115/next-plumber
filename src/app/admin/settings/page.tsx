@@ -16,6 +16,7 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [sendingAlert, setSendingAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -44,8 +45,23 @@ export default function SettingsPage() {
 
   async function sendTestAlert() {
     setSendingAlert(true);
-    setMessage("");
+    setAlertMessage("");
     try {
+      // Save current form values first so the test uses them
+      const saveRes = await fetch("/api/admin/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          editWindowMinutes,
+          lowStockAlertsEnabled,
+          lowStockAlertEmail: lowStockAlertEmail.trim() || null,
+        }),
+      });
+      if (!saveRes.ok) {
+        setAlertMessage("Could not save settings before test.");
+        return;
+      }
+
       const res = await fetch("/api/admin/alerts/low-stock", { method: "POST" });
       const data = (await res.json()) as {
         total: number;
@@ -53,14 +69,14 @@ export default function SettingsPage() {
         error?: string;
       };
       if (!res.ok) throw new Error("Request failed");
-      if (data.emailSent) setMessage("Test alert email sent.");
+      if (data.emailSent) setAlertMessage("Test alert email sent.");
       else if (data.total === 0)
-        setMessage("No low-stock items; no email sent.");
+        setAlertMessage("No low-stock items; no email sent.");
       else if (data.error)
-        setMessage(`Email not sent: ${data.error}`);
-      else setMessage("Alert checked; email not configured or disabled.");
+        setAlertMessage(`Email not sent: ${data.error}`);
+      else setAlertMessage("Alert checked; email not configured or disabled.");
     } catch {
-      setMessage("Could not send test alert.");
+      setAlertMessage("Could not send test alert.");
     } finally {
       setSendingAlert(false);
     }
@@ -313,6 +329,20 @@ export default function SettingsPage() {
             {sendingAlert ? "Sending…" : "Send test alert"}
           </button>
         </form>
+        {alertMessage && (
+          <p
+            className={`mt-3 text-sm ${
+              alertMessage.startsWith("Test alert email sent")
+                ? "text-green-600"
+                : alertMessage.startsWith("Could not") ||
+                    alertMessage.startsWith("Email not sent")
+                  ? "text-red-600"
+                  : "text-slate-600"
+            }`}
+          >
+            {alertMessage}
+          </p>
+        )}
         </div>
       </section>
     </main>
