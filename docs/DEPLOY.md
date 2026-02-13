@@ -135,7 +135,7 @@ git pull   # or rsync your built app
 npm ci --omit=dev
 npx prisma migrate deploy
 npm run build
-pm2 restart next-plumber
+pm2 restart stock-tracker
 ```
 
 ---
